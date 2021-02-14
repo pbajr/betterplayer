@@ -490,7 +490,7 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
         CGFloat height = size.height;
         
         // The player has not yet initialized.
-        if (height == CGSizeZero.height && width == CGSizeZero.width) {
+        if (height == CGSizeZero.height && width == CGSizeZero.width && [[self.player currentItem].asset tracksWithMediaType:AVMediaTypeAudio].count == 0) {
             return;
         }
         const BOOL isLive = CMTIME_IS_INDEFINITE([_player currentItem].duration);
