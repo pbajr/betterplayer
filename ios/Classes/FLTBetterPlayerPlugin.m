@@ -490,9 +490,10 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
         CGFloat height = size.height;
         
         // The player has not yet initialized.
-        if (height == CGSizeZero.height && width == CGSizeZero.width && [[_player currentItem].asset tracksWithMediaType:AVMediaTypeAudio].count == 0) {
-            return;
-        }
+        // if (height == CGSizeZero.height && width == CGSizeZero.width) {
+        //     return;
+        // }
+
         const BOOL isLive = CMTIME_IS_INDEFINITE([_player currentItem].duration);
         // The player may be initialized but still needs to determine the duration.
         if (isLive == false && [self duration] == 0) {
@@ -500,7 +501,11 @@ static inline CGFloat radiansToDegrees(CGFloat radians) {
         }
         
         _isInitialized = true;
-        [self addVideoOutput];
+
+        if ([[_player currentItem].asset tracksWithMediaType:AVMediaTypeVideo].count != 0) {
+            [self addVideoOutput];
+        }
+
         [self updatePlayingState];
         _eventSink(@{
             @"event" : @"initialized",
