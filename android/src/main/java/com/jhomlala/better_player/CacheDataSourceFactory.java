@@ -1,6 +1,7 @@
 package com.jhomlala.better_player;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -8,7 +9,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
@@ -16,8 +16,6 @@ import java.io.File;
 class CacheDataSourceFactory implements DataSource.Factory {
     private final Context context;
     private final DefaultDataSourceFactory defaultDatasourceFactory;
-
-    ///TODO: remove maxCacheSize
     private final long maxFileSize, maxCacheSize;
 
 
@@ -30,14 +28,15 @@ class CacheDataSourceFactory implements DataSource.Factory {
         this.context = context;
         this.maxCacheSize = maxCacheSize;
         this.maxFileSize = maxFileSize;
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context).build();
         defaultDatasourceFactory =
                 new DefaultDataSourceFactory(this.context, bandwidthMeter, upstreamDataSource);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public DataSource createDataSource() {
-        SimpleCache betterPlayerCache = BetterPlayerCache.createCache(context,maxCacheSize);
+    public CacheDataSource createDataSource() {
+        SimpleCache betterPlayerCache = BetterPlayerCache.createCache(context, maxCacheSize);
         return new CacheDataSource(
                 betterPlayerCache,
                 defaultDatasourceFactory.createDataSource(),

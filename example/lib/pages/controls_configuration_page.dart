@@ -9,7 +9,7 @@ class ControlsConfigurationPage extends StatefulWidget {
 }
 
 class _ControlsConfigurationPageState extends State<ControlsConfigurationPage> {
-  BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
 
   @override
   void initState() {
@@ -24,6 +24,9 @@ class _ControlsConfigurationPageState extends State<ControlsConfigurationPage> {
       enableFullscreen: false,
       controlBarHeight: 60,
       loadingColor: Colors.red,
+      overflowModalColor: Colors.indigo,
+      overflowModalTextColor: Colors.white,
+      overflowMenuIconsColor: Colors.white,
     );
 
     BetterPlayerConfiguration betterPlayerConfiguration =

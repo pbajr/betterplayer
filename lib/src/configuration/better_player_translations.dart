@@ -12,21 +12,22 @@ class BetterPlayerTranslations {
   final String overflowMenuSubtitles;
   final String overflowMenuQuality;
   final String overflowMenuAudioTracks;
+  final String qualityAuto;
 
-  BetterPlayerTranslations({
-    this.languageCode = "en",
-    this.generalDefaultError = "Video can't be played",
-    this.generalNone = "None",
-    this.generalDefault = "Default",
-    this.generalRetry = "Retry",
-    this.playlistLoadingNextVideo = "Loading next video",
-    this.controlsLive = "LIVE",
-    this.controlsNextVideoIn = "Next video in",
-    this.overflowMenuPlaybackSpeed = "Playback speed",
-    this.overflowMenuSubtitles = "Subtitles",
-    this.overflowMenuQuality = "Quality",
-    this.overflowMenuAudioTracks = "Audio",
-  });
+  BetterPlayerTranslations(
+      {this.languageCode = "en",
+      this.generalDefaultError = "Video can't be played",
+      this.generalNone = "None",
+      this.generalDefault = "Default",
+      this.generalRetry = "Retry",
+      this.playlistLoadingNextVideo = "Loading next video",
+      this.controlsLive = "LIVE",
+      this.controlsNextVideoIn = "Next video in",
+      this.overflowMenuPlaybackSpeed = "Playback speed",
+      this.overflowMenuSubtitles = "Subtitles",
+      this.overflowMenuQuality = "Quality",
+      this.overflowMenuAudioTracks = "Audio",
+      this.qualityAuto = "Auto"});
 
   factory BetterPlayerTranslations.polish() => BetterPlayerTranslations(
         languageCode: "pl",
@@ -40,6 +41,7 @@ class BetterPlayerTranslations {
         overflowMenuSubtitles: "Napisy",
         overflowMenuQuality: "Jakość",
         overflowMenuAudioTracks: "Dźwięk",
+        qualityAuto: "Automatycznie",
       );
 
   factory BetterPlayerTranslations.chinese() => BetterPlayerTranslations(
@@ -55,6 +57,7 @@ class BetterPlayerTranslations {
         overflowMenuSubtitles: "字幕",
         overflowMenuQuality: "质量",
         overflowMenuAudioTracks: "音訊",
+        qualityAuto: "汽車",
       );
 
   factory BetterPlayerTranslations.hindi() => BetterPlayerTranslations(
@@ -70,6 +73,7 @@ class BetterPlayerTranslations {
         overflowMenuSubtitles: "उपशीर्षक",
         overflowMenuQuality: "गुणवत्ता",
         overflowMenuAudioTracks: "ऑडियो",
+        qualityAuto: "ऑटो",
       );
 
   factory BetterPlayerTranslations.arabic() => BetterPlayerTranslations(
@@ -85,5 +89,52 @@ class BetterPlayerTranslations {
         overflowMenuSubtitles: "الترجمة",
         overflowMenuQuality: "الجودة",
         overflowMenuAudioTracks: "الصوت",
+        qualityAuto: "ऑटो",
+      );
+
+  factory BetterPlayerTranslations.turkish() => BetterPlayerTranslations(
+      languageCode: "tr",
+      generalDefaultError: "Video oynatılamıyor",
+      generalNone: "Hiçbiri",
+      generalDefault: "Varsayılan",
+      generalRetry: "Tekrar Dene",
+      playlistLoadingNextVideo: "Sonraki video yükleniyor",
+      controlsLive: "CANLI",
+      controlsNextVideoIn: "Sonraki video oynatılmadan",
+      overflowMenuPlaybackSpeed: "Oynatma hızı",
+      overflowMenuSubtitles: "Altyazı",
+      overflowMenuQuality: "Kalite",
+      overflowMenuAudioTracks: "Ses",
+      qualityAuto: "Otomatik");
+
+  factory BetterPlayerTranslations.vietnamese() => BetterPlayerTranslations(
+        languageCode: "vi",
+        generalDefaultError: "Video không thể phát bây giờ",
+        generalNone: "Không có",
+        generalDefault: "Mặc định",
+        generalRetry: "Thử lại ngay",
+        controlsLive: "Trực tiếp",
+        playlistLoadingNextVideo: "Đang tải video tiếp theo",
+        controlsNextVideoIn: "Video tiếp theo",
+        overflowMenuPlaybackSpeed: "Tốc độ phát",
+        overflowMenuSubtitles: "Phụ đề",
+        overflowMenuQuality: "Chất lượng",
+        overflowMenuAudioTracks: "Âm thanh",
+        qualityAuto: "Tự động",
+      );
+
+  factory BetterPlayerTranslations.spanish() => BetterPlayerTranslations(
+        languageCode: "es",
+        generalDefaultError: "No se puede reproducir el video",
+        generalNone: "Ninguno",
+        generalDefault: "Por defecto",
+        generalRetry: "Reintentar",
+        controlsLive: "EN DIRECTO",
+        playlistLoadingNextVideo: "Cargando siguiente video",
+        controlsNextVideoIn: "Siguiente video en",
+        overflowMenuPlaybackSpeed: "Velocidad",
+        overflowMenuSubtitles: "Subtítulos",
+        overflowMenuQuality: "Calidad",
+        qualityAuto: "Automática",
       );
 }

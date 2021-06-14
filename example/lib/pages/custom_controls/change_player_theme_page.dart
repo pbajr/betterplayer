@@ -9,8 +9,8 @@ class ChangePlayerThemePage extends StatefulWidget {
 }
 
 class _ChangePlayerThemePageState extends State<ChangePlayerThemePage> {
-  BetterPlayerController _betterPlayerController;
-  BetterPlayerDataSource _dataSource;
+  late BetterPlayerController _betterPlayerController;
+  BetterPlayerDataSource? _dataSource;
   BetterPlayerTheme _playerTheme = BetterPlayerTheme.material;
 
   @override
@@ -43,7 +43,8 @@ class _ChangePlayerThemePageState extends State<ChangePlayerThemePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Player with the possibility to change the theme",
+                "Player with the possibility to change the theme. Click on "
+                "buttons below to change theme of player.",
                 style: TextStyle(fontSize: 16),
               ),
             ),

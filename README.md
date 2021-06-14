@@ -9,6 +9,63 @@
 
 Advanced video player based on video_player and Chewie. It's solves many typical use cases and it's easy to run.
 
+<table>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/1.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/2.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/3.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/4.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/5.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/6.png">
+      </td>
+   </tr>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/7.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/8.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/9.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/10.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/11.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/12.png">
+      </td>
+   </tr>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/13.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/14.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/15.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/16.png">
+      </td>
+    </tr>	
+</table>
+
 ## Introduction
 This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is awesome plugin and works well in many cases. Better Player is a continuation of ideas introduced in Chewie. Better player fix common bugs, adds more configuration options and solves typical use cases. 
 
@@ -22,11 +79,13 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 ✔️ HTTP Headers support  
 ✔️ BoxFit of video support  
 ✔️ Playback speed support  
-✔️ HLS support (track, subtitles, audio track selection)  
+✔️ HLS support (track, subtitles (also segmented), audio track selection)  
+✔️ DASH support (track, subtitles, audio track selection)     
 ✔️ Alternative resolution support  
 ✔️ Cache support  
 ✔️ Notifications support  
-✔️ Picture in Picture support   
+✔️ Picture in Picture support     
+✔️ DRM support (token, Widevine)  
 ✔️ ... and much more!  
 
 
@@ -36,7 +95,7 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 
 ```yaml
 dependencies:
-  better_player: ^0.0.55
+  better_player: ^0.0.69
 ```
 
 2. Install it
@@ -50,6 +109,10 @@ $ flutter packages get
 ```dart
 import 'package:better_player/better_player.dart';
 ```
+
+## Important information
+This plugin development is in progress. You may encounter breaking changes each version. This plugin is developed part-time for free. If you need
+some feature which is supported by other players available in pub dev, then feel free to create PR. All valuable contributions are welcome!
 
 ## General Usage
 Check [Example project](https://github.com/jhomlala/betterplayer/tree/master/example) which shows how to use Better Player in different scenarios.
@@ -206,7 +269,7 @@ var dataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
       liveStream: false,
-      useHlsSubtitles: true,
+      useAsmsSubtitles: true,
       hlsTrackNames: ["Low quality", "Not so low quality", "Medium quality"],
       subtitles: [
         BetterPlayerSubtitlesSource(
@@ -401,6 +464,8 @@ var betterPlayerConfiguration = BetterPlayerConfiguration(
       ),
     );
 ```
+
+
 ```dart
    ///Color of the control bars
    final Color controlBarColor;
@@ -566,6 +631,10 @@ Possible configuration options:
 
   ///Should videos be looped
   final bool loopVideos;
+
+  ///Index of video that will start on playlist start. Id must be less than
+  ///elements in data source list. Default is 0.
+  final int initialStartIndex;
 ```
 
 ### BetterPlayerDataSource
@@ -590,7 +659,7 @@ Use BetterPlayerDataSource.network to build network data source, BetterPlayerDat
 to build memory data source.
 
 Possible configuration options:
-```
+```dart
   ///Type of source of video
   final BetterPlayerDataSourceType type;
 
@@ -607,14 +676,14 @@ Possible configuration options:
   /// Custom headers for player
   final Map<String, String> headers;
 
-  ///Should player use hls subtitles. Default is true.
-  final bool useHlsSubtitles;
+  ///Should player use hls / dash subtitles (ASMS - Adaptive Streaming Media Sources).
+  final bool useAsmsSubtitles;
 
   ///Should player use hls tracks
-  final bool useHlsTracks;
+  final bool useAsmsTracks;
 
-  ///Should player use hls audio tracks
-  final bool useHlsAudioTracks;
+  ///Should player use hls /das audio tracks
+  final bool useAsmsAudioTracks;
 
   ///List of strings that represents tracks names.
   ///If empty, then better player will choose name based on track parameters
@@ -640,6 +709,18 @@ Possible configuration options:
 
   ///Video format hint when data source url has not valid extension.
   final BetterPlayerVideoFormat videoFormat;
+
+  ///Extension of video without dot. Used only in memory data source.
+  final String videoExtension;
+
+  ///Configuration of content protection
+  final BetterPlayerDrmConfiguration drmConfiguration;
+
+  ///Placeholder widget which will be shown until video load or play. This
+  ///placeholder may be useful if you want to show placeholder before each video
+  ///in playlist. Otherwise, you should use placeholder from
+  /// BetterPlayerConfiguration.
+  final Widget placeholder;
 ```
 
 
@@ -656,6 +737,9 @@ Define cache configuration for given data source. Cache works only for network d
   /// The maximum size of each individual file in bytes.
   /// Android only option.
   final int maxCacheFileSize;
+
+  ///Cache key to re-use same cached data between app sessions.
+  final String? key;
 ```
 
 
@@ -811,7 +895,8 @@ BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         showNotification: true,
         title: "Elephant dream",
         author: "Some author",
-        imageUrl:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/1200px-African_Bush_Elephant.jpg",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/1200px-African_Bush_Elephant.jpg",
+        activityName: "MainActivity",
       ),
     );
 ```
@@ -819,7 +904,8 @@ BetterPlayerDataSource dataSource = BetterPlayerDataSource(
 There are 3 majors parameters here:
 title - name of the resource, shown in first line
 author - author of the resource, shown in second line
-imageUrl - image of the resource (optional). Can be both link to external image or internal file.
+imageUrl - image of the resource (optional). Can be both link to external image or internal file
+activityName - name of activity used to open application back on notification click; used only for Activity
 
 If showNotification is set as true and no title and author is provided, then empty notification will be
 displayed.
@@ -935,13 +1021,66 @@ will have incorrect orientation.
     betterPlayerController.setControlsAlwaysVisible(true);
 ```
 
+### DRM
+To configure DRM for your data source, use drmConfiguration parameter. 
+Supported DRMs:
+
+* Token based (authorization header): Android/iOS
+* Widevine (licensue url + headers): Android
+
+Additional DRM types may be added in the future.
+
+Token based:
+```dart
+ BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      "url",
+      videoFormat: BetterPlayerVideoFormat.hls,
+      drmConfiguration: BetterPlayerDrmConfiguration(
+        drmType: BetterPlayerDrmType.token,
+        token:
+            "Bearer=token",
+      ),
+    );
+````
+
+Widevine (license url based):
+```dart
+ BetterPlayerDataSource _widevineDataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      "url",
+      drmConfiguration: BetterPlayerDrmConfiguration(
+        drmType: BetterPlayerDrmType.widevine,
+        licenseUrl:
+            "licenseUrl",
+        headers: {"header": "value"}
+      ),
+    );
+    _widevineController.setupDataSource(_widevineDataSource);
+
+```
+### Set mix audio with others
+You can enable mix with audio with others app with method:
+```dart
+betterPlayerController.setMixWithOthers(true)
+```
+Default value is false.
 
 ### More documentation
 https://pub.dev/documentation/better_player/latest/better_player/better_player-library.html
 
+### Cache
+Clear all cached data:
 
+```dart
+betterPlayerController.clearCache();
+```
+Start pre cache before playing video (android only):
+```dart
+betterPlayerController.preCache(_betterPlayerDataSource);
+```
 
-
-
-
-
+Stop running pre cache (android only):
+```dart
+betterPlayerController.stopPreCache(_betterPlayerDataSource);
+```

@@ -4,16 +4,18 @@ import 'package:better_player/better_player.dart';
 import 'package:better_player_example/model/video_list_data.dart';
 import 'package:better_player_example/pages/reusable_video_list/reusable_video_list_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/flutter_widgets.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class ReusableVideoListWidget extends StatefulWidget {
-  final VideoListData videoListData;
-  final ReusableVideoListController videoListController;
+  final VideoListData? videoListData;
+  final ReusableVideoListController? videoListController;
+  final Function? canBuildVideo;
 
   const ReusableVideoListWidget({
-    Key key,
+    Key? key,
     this.videoListData,
     this.videoListController,
+    this.canBuildVideo,
   }) : super(key: key);
 
   @override
@@ -22,21 +24,16 @@ class ReusableVideoListWidget extends StatefulWidget {
 }
 
 class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
-  VideoListData get videoListData => widget.videoListData;
-  BetterPlayerController controller;
-  StreamController<BetterPlayerController>
+  VideoListData? get videoListData => widget.videoListData;
+  BetterPlayerController? controller;
+  StreamController<BetterPlayerController?>
       betterPlayerControllerStreamController = StreamController.broadcast();
   bool _initialized = false;
-  bool _wasPlaying = false;
-  Duration _lastPosition;
-  bool _afterBuild = false;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _afterBuild = true;
-    });
   }
 
   @override
@@ -47,11 +44,17 @@ class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
 
   void _setupController() {
     if (controller == null) {
-      controller = widget.videoListController.getBetterPlayerController();
-      controller.setupDataSource(
-          BetterPlayerDataSource.network(videoListData.videoUrl));
-      betterPlayerControllerStreamController.add(controller);
-      controller.addEventsListener(onPlayerEvent);
+      controller = widget.videoListController!.getBetterPlayerController();
+      if (controller != null) {
+        controller!.setupDataSource(BetterPlayerDataSource.network(
+            videoListData!.videoUrl,
+            cacheConfiguration:
+                BetterPlayerCacheConfiguration(useCache: true)));
+        if (!betterPlayerControllerStreamController.isClosed) {
+          betterPlayerControllerStreamController.add(controller);
+        }
+        controller!.addEventsListener(onPlayerEvent);
+      }
     }
   }
 
@@ -61,25 +64,27 @@ class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
       return;
     }
     if (controller != null && _initialized) {
-      _afterBuild = false;
-      controller.removeEventsListener(onPlayerEvent);
-      _wasPlaying = controller.isPlaying();
-      _lastPosition = controller.videoPlayerController.value.position;
-      widget.videoListController.freeBetterPlayerController(controller);
-      controller.pause();
+      controller!.removeEventsListener(onPlayerEvent);
+      widget.videoListController!.freeBetterPlayerController(controller);
+      controller!.pause();
       controller = null;
-      betterPlayerControllerStreamController.add(null);
+      if (!betterPlayerControllerStreamController.isClosed) {
+        betterPlayerControllerStreamController.add(null);
+      }
       _initialized = false;
     }
   }
 
   void onPlayerEvent(BetterPlayerEvent event) {
+    if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
+      videoListData!.lastPosition = event.parameters!["progress"] as Duration?;
+    }
     if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
-      if (_lastPosition != null) {
-        controller.seekTo(_lastPosition);
+      if (videoListData!.lastPosition != null) {
+        controller!.seekTo(videoListData!.lastPosition!);
       }
-      if (_wasPlaying) {
-        controller.play();
+      if (videoListData!.wasPlaying!) {
+        controller!.play();
       }
     }
   }
@@ -96,32 +101,49 @@ class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
           Padding(
             padding: EdgeInsets.all(8),
             child: Text(
-              videoListData.videoTitle,
+              videoListData!.videoTitle,
               style: TextStyle(fontSize: 50),
             ),
           ),
           VisibilityDetector(
             key: Key(hashCode.toString() + DateTime.now().toString()),
             onVisibilityChanged: (info) {
-              if (!_afterBuild) {
+              if (!widget.canBuildVideo!()) {
+                _timer?.cancel();
+                _timer = null;
+                _timer = Timer(Duration(milliseconds: 500), () {
+                  if (info.visibleFraction >= 0.6) {
+                    _setupController();
+                  } else {
+                    _freeController();
+                  }
+                });
                 return;
               }
-              if (info.visibleFraction >= 0.8) {
+              if (info.visibleFraction >= 0.6) {
                 _setupController();
               } else {
                 _freeController();
               }
             },
-            child: StreamBuilder<BetterPlayerController>(
+            child: StreamBuilder<BetterPlayerController?>(
               stream: betterPlayerControllerStreamController.stream,
               builder: (context, snapshot) {
                 return AspectRatio(
                   aspectRatio: 16 / 9,
                   child: controller != null
                       ? BetterPlayer(
-                          controller: controller,
+                          controller: controller!,
                         )
-                      : Container(),
+                      : Container(
+                          color: Colors.black,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                        ),
                 );
               },
             ),
@@ -141,21 +163,21 @@ class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
               ElevatedButton(
                 child: Text("Play"),
                 onPressed: () {
-                  controller.play();
+                  controller!.play();
                 },
               ),
               const SizedBox(width: 8),
               ElevatedButton(
                 child: Text("Pause"),
                 onPressed: () {
-                  controller.pause();
+                  controller!.pause();
                 },
               ),
               const SizedBox(width: 8),
               ElevatedButton(
                 child: Text("Set max volume"),
                 onPressed: () {
-                  controller.setVolume(100);
+                  controller!.setVolume(1.0);
                 },
               ),
             ]),
@@ -167,8 +189,10 @@ class _ReusableVideoListWidgetState extends State<ReusableVideoListWidget> {
 
   @override
   void deactivate() {
+    if (controller != null) {
+      videoListData!.wasPlaying = controller!.isPlaying();
+    }
     _initialized = true;
-    _freeController();
     super.deactivate();
   }
 }

@@ -26,9 +26,11 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
             ),
           ),
           AspectRatio(
-              aspectRatio: 16 / 9,
-              child: BetterPlayer.network(
-                  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4')),
+            aspectRatio: 16 / 9,
+            child: BetterPlayer.network(
+              Constants.forBiggerBlazesUrl,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
@@ -41,7 +43,7 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
             future: Utils.getFileUrl(Constants.fileTestVideoUrl),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.data != null) {
-                return BetterPlayer.file(snapshot.data);
+                return BetterPlayer.file(snapshot.data!);
               } else {
                 return const SizedBox();
               }

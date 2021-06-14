@@ -8,7 +8,7 @@ class NotificationPlayerPage extends StatefulWidget {
 }
 
 class _NotificationPlayerPageState extends State<NotificationPlayerPage> {
-  BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
 
   @override
   void initState() {
@@ -32,8 +32,7 @@ class _NotificationPlayerPageState extends State<NotificationPlayerPage> {
         showNotification: true,
         title: "Elephant dream",
         author: "Some author",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/1200px-African_Bush_Elephant.jpg",
+        imageUrl: Constants.catImageUrl,
       ),
     );
     _betterPlayerController.setupDataSource(dataSource);

@@ -2,19 +2,23 @@
 ///background.
 class BetterPlayerNotificationConfiguration {
   ///Is player controls notification enabled
-  final bool showNotification;
+  final bool? showNotification;
 
   ///Title of the given data source, used in controls notification
-  final String title;
+  final String? title;
 
   ///Author of the given data source, used in controls notification
-  final String author;
+  final String? author;
 
   ///Image of the video, used in controls notification
-  final String imageUrl;
+  final String? imageUrl;
 
   ///Name of the notification channel. Used only in Android.
-  final String notificationChannelName;
+  final String? notificationChannelName;
+
+  ///Name of activity used to open application from notification. Used only
+  ///in Android.
+  final String? activityName;
 
   const BetterPlayerNotificationConfiguration({
     this.showNotification,
@@ -22,5 +26,6 @@ class BetterPlayerNotificationConfiguration {
     this.author,
     this.imageUrl,
     this.notificationChannelName,
+    this.activityName,
   });
 }

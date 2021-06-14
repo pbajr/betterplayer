@@ -7,6 +7,9 @@ assignees: jhomlala
 
 ---
 
+**History check**
+Please confirm that you've checked issues history and you didn't find anything which may solve your issue.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -16,6 +19,9 @@ Steps to reproduce the behavior:
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
+
+**Example code*
+Paste here your minimal reproducible code. This code should be ready to copy-paste-run.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.

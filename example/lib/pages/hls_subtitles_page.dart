@@ -8,7 +8,7 @@ class HlsSubtitlesPage extends StatefulWidget {
 }
 
 class _HlsSubtitlesPageState extends State<HlsSubtitlesPage> {
-  BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
 
   @override
   void initState() {
@@ -19,7 +19,7 @@ class _HlsSubtitlesPageState extends State<HlsSubtitlesPage> {
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network, Constants.hlsPlaylistUrl,
-        useHlsSubtitles: true);
+        useAsmsSubtitles: true);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();

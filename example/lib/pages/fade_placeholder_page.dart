@@ -10,7 +10,7 @@ class FadePlaceholderPage extends StatefulWidget {
 }
 
 class _FadePlaceholderPageState extends State<FadePlaceholderPage> {
-  BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
   StreamController<bool> _playController = StreamController.broadcast();
 
   @override
@@ -48,7 +48,7 @@ class _FadePlaceholderPageState extends State<FadePlaceholderPage> {
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: Image.network(
-              "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg",
+              Constants.catImageUrl,
               fit: BoxFit.fill,
             ),
           ),
@@ -69,7 +69,7 @@ class _FadePlaceholderPageState extends State<FadePlaceholderPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Normal player with configuration managed by developer.",
+              "Normal player with placeholder which fade.",
               style: TextStyle(fontSize: 16),
             ),
           ),
